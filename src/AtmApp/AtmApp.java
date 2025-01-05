@@ -74,7 +74,8 @@ public class AtmApp {
                                 try (PrintStream pAccount = new PrintStream(new PrintStream("c:/AtmApp/account-balance.txt"))) {
                                     System.out.println("Your transaction will be printed in file");
                                     System.out.println("Your account balance is: " + primaryAccount);
-                                    pAccount.println("Your accounts balance are: \n" +
+                                    pAccount.println("ATM APP PRINT ACCOUNT \n" +
+                                            "Your accounts balance are: \n" +
                                             "Primary account: " + primaryAccount + "\n" +
                                             "Backup account: " + backupAccount);
 
@@ -89,7 +90,8 @@ public class AtmApp {
                                     System.out.println("Your transaction will be printed in file \n" +
                                             "Please enter the transfer amount");
                                     transferWithdraw = scanner.nextDouble();
-                                    pTransfer.println("The primary account balance : " + primaryAccount + "\n" +
+                                    pTransfer.println("ATM APP PRINT ACCOUNT \n" +
+                                            "The primary account balance : " + primaryAccount + "\n" +
                                             "The backup account balance : " + backupAccount);
                                     if (transferWithdraw > 0 && transferWithdraw <= primaryAccount) {
                                         primaryAccount -= transferWithdraw;
