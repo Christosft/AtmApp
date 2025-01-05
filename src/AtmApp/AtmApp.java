@@ -6,12 +6,9 @@ public class AtmApp {
 
     static double primaryAccount = 1500;
     static double backupAccount = 1000;
-    static double newBackupAccount;
     static double transferWithdraw = 0;
     static double deposit = 0;
     static double withdraw = 0;
-    static double dAccount;
-    static double wAccount;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -35,42 +32,56 @@ public class AtmApp {
                     case 1:
                         System.out.println("Select the deposit amount");
                         deposit = scanner.nextDouble();
+                        if (deposit > 0) {
+                            primaryAccount += deposit;
+                            System.out.println("You successfully deposit: " + deposit);
+                            System.out.println("Your new account balance is: " + primaryAccount);
+                        } else {
+                            System.out.println("The amount of deposit is invalid");
+                        }
                         break;
 
                     case 2:
                         System.out.println("Select the withdraw amount");
                         withdraw = scanner.nextDouble();
-                        break;
-
-                    case 3:
-                        System.out.println("Check account balance");
-                        if (deposit > 0) {
-                            dAccount = primaryAccount + deposit;
-                            System.out.println("Your account balance is: " + dAccount);
-                        } else if (withdraw > 0) {
-                            wAccount = primaryAccount - withdraw;
-                            System.out.println("Your account balance is: " + wAccount);
-
+                        if (withdraw > 0 && withdraw <= primaryAccount) {
+                            primaryAccount -= withdraw;
+                            System.out.println("You successfully withdraw: " + withdraw);
+                            System.out.println("Your new account balance is: " + primaryAccount);
+                        } else {
+                            System.out.println("The withdraw is invalid or there are insufficient funds.");
                         } break;
 
-                    case 4:
-                        System.out.println("Account transfer");
-                        transferWithdraw = scanner.nextDouble();
-                        newBackupAccount = backupAccount + transferWithdraw;
-                        System.out.println("Your backup account balance was: " + backupAccount +"\n" +
-                                "Your new balance is: " + newBackupAccount);
-                        break;
+                            case 3:
+                                System.out.println("Your account balance is: " + primaryAccount);
+                                break;
 
-                    case 5:
-                        System.out.println("Exit menu.");
-                        scanner.close();
-                        return;
+                            case 4:
+                                System.out.println("Account transfer");
+                                transferWithdraw = scanner.nextDouble();
 
-                    default:
-                        System.out.println("Wrong entry. \n" +
-                                "Please make a selection.");
+                                if (transferWithdraw > 0 && transferWithdraw <= primaryAccount) {
+                                    primaryAccount -= transferWithdraw;
+                                    backupAccount += transferWithdraw;
+                                    System.out.println("You successfully transfer the amount: " + transferWithdraw + "\n" +
+                                            "Your new primary account balance is: " + primaryAccount + "\n" +
+                                            "Your new backup account balance is: " + backupAccount);
+                                } else {
+                                    System.out.println("The transfer you are trying is invalid or there are insufficient funds!");
+                                }
+                                break;
+
+                            case 5:
+                                System.out.println("Exit menu.");
+                                scanner.close();
+                                return;
+
+                            default:
+                                System.out.println("Wrong entry. \n" +
+                                        "Please make a selection.");
+                        }
 
                 }
             }
         }
-    }
+
