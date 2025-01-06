@@ -11,12 +11,25 @@ public class AtmApp {
     static double transferWithdraw = 0;
     static double deposit = 0;
     static double withdraw = 0;
+    static int pinNumber = 1234;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        System.out.println("Please enter your pin number: ");
 
-        atmAppMenu();
+            while (true) {
+                int enteredPin = scanner.nextInt();
+                if (enteredPin == pinNumber) {
+                    System.out.println("You have entered correct Pin Number.");
+                    System.out.println("You have entered the ATM MENU! ");
+                    atmAppMenu();
+                    break;
+                } else {
+                    System.err.println("Error.You have entered wrong pin number. \n" +
+                            "Please try again.");
+                }
 
+            }
     }
 
         public static void atmAppMenu() {
