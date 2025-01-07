@@ -1,6 +1,6 @@
 package AtmApp;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -14,32 +14,21 @@ public class AtmApp {
     static int pinNumber = 1234;
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        System.out.println("Please enter your pin number: ");
+    public static void main(String[] args) throws IOException {
+        pinNumber();
+        atmAppMenu();
 
-            while (true) {
-                int enteredPin = scanner.nextInt();
-                if (enteredPin == pinNumber) {
-                    System.out.println("You have entered correct Pin Number.");
-                    System.out.println("You have entered the ATM MENU! ");
-                    atmAppMenu();
-                    break;
-                } else {
-                    System.err.println("Error.You have entered wrong pin number. \n" +
-                            "Please try again.");
-                }
-
-            }
     }
 
-        public static void atmAppMenu() {
+        public static void atmAppMenu() throws IOException {
             while (true) {
                 System.out.println("Atm app menu: ");
                 System.out.println("1. Make a deposit");
                 System.out.println("2. Make a withdraw");
                 System.out.println("3. Account balance");
-                System.out.println("4. account transfer");
-                System.out.println("5. Exit Atm App menu");
+                System.out.println("4. Account transfer");
+                System.out.println("5. Exit and log new customer");
+                System.out.println("6. Exit Atm App menu");
 
                 int inputChoice = scanner.nextInt();
 
@@ -60,10 +49,14 @@ public class AtmApp {
                         accountsTransfer();
                         break;
 
-                            case 5:
-                                System.out.println("Exit menu.");
-                                scanner.close();
-                                return;
+                    case 5:
+                        pinNumber();
+                        break;
+
+                    case 6:
+                        System.out.println("Exit menu.");
+                        scanner.close();
+                        return;
 
                             default:
                                 System.err.println("Wrong entry. \n" +
@@ -73,7 +66,7 @@ public class AtmApp {
                 }
             }
 
-            public static void depositCase() {
+            public static void depositCase() throws IOException{
                 System.out.println("Select the deposit amount");
                 try (PrintStream pDeposit = new PrintStream(new PrintStream("c:/AtmApp/deposit.txt"))) {
                     System.out.println("Your transaction will be printed in file");
@@ -85,11 +78,14 @@ public class AtmApp {
                         pDeposit.println("ATM APP PRINT ACCOUNT \n" +
                                 "You successfully deposit: " + deposit + "\n" +
                                 "Your new account balance is: " + primaryAccount);
-                    } else {
-                        System.err.println("The amount of deposit is invalid");
                     }
-                } catch (FileNotFoundException e) {
+                    if (deposit < 0){
+                        System.err.println("Error. The amount of deposit is invalid");
+                    }
+                } catch (IOException e) {
                     System.err.println("The file is not found or cannot be created.");
+                    //e.printStackTrace();
+                    throw e;
                 }
             }
 
@@ -98,18 +94,22 @@ public class AtmApp {
                 try (PrintStream pWithdraw = new PrintStream(new PrintStream("c:/AtmApp/withdraw.txt"))) {
                     System.out.println("Your transaction will be printed in file");
                     withdraw = scanner.nextDouble();
-                    if (withdraw > 0 && withdraw <= primaryAccount) {
-                        primaryAccount -= withdraw;
-                        System.out.println("You successfully withdraw: " + withdraw);
-                        System.out.println("Your new account balance is: " + primaryAccount);
-                        pWithdraw.println("ATM APP PRINT ACCOUNT \n" +
-                                "You successfully withdraw: " + withdraw + "\n" +
-                                "Your new account balance is: " + primaryAccount);
-                    } else {
-                        System.err.println("The withdraw is invalid or there are insufficient funds.");
+                    if (withdraw <= 0 && withdraw > primaryAccount) {
+                        System.err.println("Error. The withdraw is invalid or there are insufficient funds.");
                     }
-                } catch (FileNotFoundException e) {
-                    System.err.println("The file is not found or cannot be created.");
+                    if (withdraw >= 800) {
+                        System.err.println("Sorry. You have reached the withdrawn day limit.");
+                    }
+
+                    primaryAccount -= withdraw;
+                    System.out.println("You successfully withdraw: " + withdraw);
+                    System.out.println("Your new account balance is: " + primaryAccount);
+                    pWithdraw.println("ATM APP PRINT ACCOUNT \n" +
+                            "You successfully withdraw: " + withdraw + "\n" +
+                            "Your new account balance is: " + primaryAccount);
+
+                } catch (IOException e) {
+                    System.err.println("Error. The file is not found or cannot be created.");
                 }
             }
 
@@ -124,8 +124,8 @@ public class AtmApp {
                             "Primary account: " + primaryAccount + "\n" +
                             "Backup account: " + backupAccount);
 
-                } catch (FileNotFoundException e) {
-                    System.err.println("The file is not found or cannot be created.");
+                } catch (IOException e) {
+                    System.err.println("Error. The file is not found or cannot be created.");
                 }
             }
 
@@ -148,10 +148,28 @@ public class AtmApp {
                         pTransfer.println("The primary account balance : " + primaryAccount + "\n" +
                                 "The backup account balance : " + backupAccount);
                     } else {
-                        System.err.println("The transfer you are trying is invalid or there are insufficient funds!");
+                        System.err.println("Error. The transfer you are trying is invalid or there are insufficient funds!");
                     }
-                } catch (FileNotFoundException e) {
-                    System.err.println("The file is not found or cannot be created.");
+                } catch (IOException e) {
+                    System.err.println("Error. The file is not found or cannot be created.");
+                }
+            }
+
+            private static void pinNumber() {
+                System.out.println("Please enter your pin number: ");
+
+                while (true) {
+                    int enteredPin = scanner.nextInt();
+
+                    if (enteredPin == pinNumber) {
+                        System.out.println("You have entered correct Pin Number.");
+                        System.out.println("You have entered the ATM MENU! ");
+                        break;
+                    } else {
+                        System.err.println("Error.You have entered wrong pin number. \n" +
+                                "Please try again.");
+                    }
+
                 }
             }
         }
