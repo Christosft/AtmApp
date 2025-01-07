@@ -66,7 +66,7 @@ public class AtmApp {
                                 return;
 
                             default:
-                                System.out.println("Wrong entry. \n" +
+                                System.err.println("Wrong entry. \n" +
                                         "Please make a selection.");
                         }
 
