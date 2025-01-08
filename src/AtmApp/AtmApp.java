@@ -4,7 +4,16 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+/**
+ * This is a basic ATM program.
+ * I use simple coding for all the function of the app.
+ *
+ * @author chris
+ * @version 0.1
+ */
+
 public class AtmApp {
+
 
     static double primaryAccount = 1500;
     static double backupAccount = 1000;
@@ -27,8 +36,7 @@ public class AtmApp {
                 System.out.println("2. Make a withdraw");
                 System.out.println("3. Account balance");
                 System.out.println("4. Account transfer");
-                System.out.println("5. Exit and log new customer");
-                System.out.println("6. Exit Atm App menu");
+                System.out.println("5. Exit Atm App menu");
 
                 int inputChoice = scanner.nextInt();
 
@@ -50,12 +58,9 @@ public class AtmApp {
                         break;
 
                     case 5:
-                        pinNumber();
-                        break;
-
-                    case 6:
                         System.out.println("Exit menu.");
-                        scanner.close();
+                        pinNumber();
+                        atmAppMenu();
                         return;
 
                             default:
