@@ -3,35 +3,41 @@ package AtmApp;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
+import AtmApp.ClientModel.ClientModel;
+
 
 /**
  * This is a basic ATM program.
  * I use simple coding for all the function of the app.
  *
  * @author chris
- * @version 0.1
+ * @version 0.2
  */
 
 public class AtmApp {
 
 
-    static double primaryAccount = 1500;
-    static double backupAccount = 1000;
+    static double primaryAccount;
+    static double backupAccount;
     static double transferWithdraw = 0;
     static double deposit = 0;
     static double withdraw = 0;
-    static int pinNumber = 1234;
+    static ClientModel clientModel;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
+        clientModel = new ClientModel(1651, "Chris", "Doe", "115424856", "6948576978", "Athens", 3000, 1500);
+        primaryAccount = clientModel.getPrimaryAccount();
+        backupAccount = clientModel.getBackupAccount();
         pinNumber();
         atmAppMenu();
 
+
     }
 
-        public static void atmAppMenu() throws IOException {
+    public static void atmAppMenu() throws IOException {
             while (true) {
-                System.out.println("Atm app menu: ");
+                System.out.println("Atm app menu: Hello " + clientModel.getFirstname() + " " + clientModel.getLastname());
                 System.out.println("1. Make a deposit");
                 System.out.println("2. Make a withdraw");
                 System.out.println("3. Account balance");
@@ -104,6 +110,7 @@ public class AtmApp {
                     }
                     if (withdraw >= 800) {
                         System.err.println("Sorry. You have reached the withdrawn day limit.");
+                        return;
                     }
 
                     primaryAccount -= withdraw;
@@ -166,7 +173,7 @@ public class AtmApp {
                 while (true) {
                     int enteredPin = scanner.nextInt();
 
-                    if (enteredPin == pinNumber) {
+                    if (enteredPin == clientModel.getPinNumber()) {
                         System.out.println("You have entered correct Pin Number.");
                         System.out.println("You have entered the ATM MENU! ");
                         break;

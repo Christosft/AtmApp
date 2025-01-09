@@ -6,8 +6,7 @@ public class ClientsMain {
 
     public static void main(String[] args) {
 
-        ClientModel clientModel = new ClientModel(1,"Chris", "Doe", "115424856", "6948576978", "Athens", 1500, 1000);
+        ClientModel clientModel = new ClientModel(1651,"Chris", "Doe", "115424856", "6948576978", "Athens", 3000, 1500);
 
-        System.out.println("The clients details are: " + clientModel.getId() + ", " + clientModel.getFirstname() + "," + clientModel.getLastname());
     }
 }

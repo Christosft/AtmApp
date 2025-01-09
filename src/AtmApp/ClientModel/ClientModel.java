@@ -2,7 +2,7 @@ package AtmApp.ClientModel;
 
 
 public class ClientModel {
-    private int id;
+    private int pinNumber;
     private String firstname;
     private String lastname;
     private String vatRegistrationNo;
@@ -12,8 +12,8 @@ public class ClientModel {
     private double backupAccount;
 
 
-    public ClientModel(int id, String firstname, String lastname, String vatRegistrationNo, String phoneNo, String city, double primaryAccount, double backupAccount) {
-        this.id = id;
+    public ClientModel(int pinNumber, String firstname, String lastname, String vatRegistrationNo, String phoneNo, String city, double primaryAccount, double backupAccount) {
+        this.pinNumber = pinNumber;
         this.firstname = firstname;
         this.lastname = lastname;
         this.vatRegistrationNo = vatRegistrationNo;
@@ -23,12 +23,12 @@ public class ClientModel {
         this.backupAccount = backupAccount;
     }
 
-    public int getId() {
-        return id;
+    public int getPinNumber() {
+        return pinNumber;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPinNumber(int pinNumber) {
+        this.pinNumber = pinNumber;
     }
 
     public String getFirstname() {

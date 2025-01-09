@@ -3,7 +3,7 @@ package AtmApp.Clients;
 public class AtmClients {
 
     private static int clientCount = 0;
-    private int id;
+    private int pinNumber;
     private double primaryAccount;
     private double backupAccount;
     private String firstname;
@@ -13,8 +13,8 @@ public class AtmClients {
         clientCount++;
     }
 
-    public AtmClients(int id, String firstname, String lastname, double primaryAccount, double backupAccount) {
-        this.id = id;
+    public AtmClients(int pinNumber, String firstname, String lastname, double primaryAccount, double backupAccount) {
+        this.pinNumber = pinNumber;
         this.firstname = firstname;
         this.lastname = lastname;
         this.primaryAccount = primaryAccount;
@@ -29,12 +29,12 @@ public class AtmClients {
         AtmClients.clientCount = clientCount;
     }
 
-    public int getId() {
-        return id;
+    public int getPinNumber() {
+        return pinNumber;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPinNumber(int pinNumber) {
+        this.pinNumber = pinNumber;
     }
 
     public String getFirstname() {
