@@ -37,12 +37,13 @@ public class AtmApp {
 
     public static void atmAppMenu() throws IOException {
             while (true) {
-                System.out.println("Atm app menu: Hello " + clientModel.getFirstname() + " " + clientModel.getLastname());
+                System.out.println("Hello " + clientModel.getFirstname() + " " + clientModel.getLastname());
                 System.out.println("1. Make a deposit");
                 System.out.println("2. Make a withdraw");
                 System.out.println("3. Account balance");
                 System.out.println("4. Account transfer");
-                System.out.println("5. Exit Atm App menu");
+                System.out.println("5. Pin number change");
+                System.out.println("6. Exit Atm App menu");
 
                 int inputChoice = scanner.nextInt();
 
@@ -64,6 +65,10 @@ public class AtmApp {
                         break;
 
                     case 5:
+                        pinChange();
+                        break;
+
+                    case 6:
                         System.out.println("Exit menu.");
                         pinNumber();
                         atmAppMenu();
@@ -132,6 +137,7 @@ public class AtmApp {
                     System.out.println("Your primary account balance is: " + primaryAccount);
                     System.out.println("Your backup account balance is: " + backupAccount);
                     pAccount.println("ATM APP PRINT ACCOUNT \n" +
+                            "Full name: " + clientModel.getLastname() + " " + clientModel.getFirstname() + "\n" +
                             "Your accounts balance are: \n" +
                             "Primary account: " + primaryAccount + "\n" +
                             "Backup account: " + backupAccount);
@@ -148,8 +154,8 @@ public class AtmApp {
                             "Please enter the transfer amount");
                     transferWithdraw = scanner.nextDouble();
                     pTransfer.println("ATM APP PRINT ACCOUNT \n" +
-                            "The primary account balance : " + primaryAccount + "\n" +
-                            "The backup account balance : " + backupAccount);
+                            "The primary account balance: " + primaryAccount + "\n" +
+                            "The backup account balance: " + backupAccount);
                     if (transferWithdraw > 0 && transferWithdraw <= primaryAccount) {
                         primaryAccount -= transferWithdraw;
                         backupAccount += transferWithdraw;
@@ -168,20 +174,39 @@ public class AtmApp {
             }
 
             private static void pinNumber() {
-                System.out.println("Please enter your pin number: ");
+                System.out.println("Please enter your pin number.");
+                System.out.println("Pin: ");
 
                 while (true) {
                     int enteredPin = scanner.nextInt();
 
                     if (enteredPin == clientModel.getPinNumber()) {
-                        System.out.println("You have entered correct Pin Number.");
+                        System.out.println();
                         System.out.println("You have entered the ATM MENU! ");
                         break;
                     } else {
                         System.err.println("Error.You have entered wrong pin number. \n" +
                                 "Please try again.");
                     }
+                }
+            }
+            private static void pinChange () {
+                System.out.println("Please choose new pin number");
+                int newPinNUmber = scanner.nextInt();
 
+                while(true) {
+                    if (newPinNUmber == clientModel.getPinNumber()) {
+                        System.err.println("Error. You already use this pin number. choose another");
+                        break;
+                    } else if (newPinNUmber <= 0) {
+                        System.err.println("Error. Pin number must not be negative");
+                        break;
+                    } else {
+                        clientModel.setPinNumber(newPinNUmber);
+                        System.out.println("You successfully change your pin number!");
+                        System.out.println("The Atm App will restart and enter with new pin number");
+                        pinNumber();
+                    }
                 }
             }
         }
