@@ -2,6 +2,7 @@ package AtmApp;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import AtmApp.ClientModel.ClientModel;
 
@@ -11,7 +12,7 @@ import AtmApp.ClientModel.ClientModel;
  * I use simple coding for all the function of the app.
  *
  * @author chris
- * @version 0.2
+ * @version 0.4
  */
 
 public class AtmApp {
@@ -23,6 +24,8 @@ public class AtmApp {
     static double deposit = 0;
     static double withdraw = 0;
     static ClientModel clientModel;
+    static int enteredPin;
+    static int newPinNUmber;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
@@ -178,7 +181,7 @@ public class AtmApp {
                 System.out.println("Pin: ");
 
                 while (true) {
-                    int enteredPin = scanner.nextInt();
+                    enteredPin = scanner.nextInt();
 
                     if (enteredPin == clientModel.getPinNumber()) {
                         System.out.println();
@@ -190,23 +193,31 @@ public class AtmApp {
                     }
                 }
             }
-            private static void pinChange () {
-                System.out.println("Please choose new pin number");
-                int newPinNUmber = scanner.nextInt();
-
-                while(true) {
-                    if (newPinNUmber == clientModel.getPinNumber()) {
-                        System.err.println("Error. You already use this pin number. choose another");
-                        break;
-                    } else if (newPinNUmber <= 0) {
+            private static void pinChange () throws IOException {
+                try {
+                    System.out.println("Please give your old pin number: ");
+                    enteredPin = scanner.nextInt();
+                    if (enteredPin != clientModel.getPinNumber()) {
+                        System.err.println("Error. Enter your current pin number.");
+                        return;
+                    }
+                    System.out.println("Please choose new pin number: ");
+                    newPinNUmber = scanner.nextInt();
+                    if (newPinNUmber == enteredPin) {
+                        System.err.println("Error. The pin must not be the same with the previous one.");
+                        return;
+                    } if (newPinNUmber <= 0) {
                         System.err.println("Error. Pin number must not be negative");
-                        break;
                     } else {
                         clientModel.setPinNumber(newPinNUmber);
                         System.out.println("You successfully change your pin number!");
                         System.out.println("The Atm App will restart and enter with new pin number");
                         pinNumber();
+                        atmAppMenu();
                     }
+
+                } catch (InputMismatchException e) {
+                    System.out.println();
                 }
             }
         }
