@@ -1,5 +1,6 @@
 package AtmApp;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.InputMismatchException;
@@ -26,15 +27,15 @@ public class AtmApp {
     static ClientModel clientModel;
     static int enteredPin;
     static int newPinNUmber;
+    static int vat;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-        clientModel = new ClientModel(1651, "Chris", "Doe", "115424856", "6948576978", "Athens", 3000, 1500);
+        clientModel = new ClientModel(1651, "Chris", "Doe", 115424856, "6948576978", "Athens", 3000, 1500);
         primaryAccount = clientModel.getPrimaryAccount();
         backupAccount = clientModel.getBackupAccount();
         pinNumber();
         atmAppMenu();
-
 
     }
 
@@ -73,47 +74,50 @@ public class AtmApp {
 
                     case 6:
                         System.out.println("Exit menu.");
-                        pinNumber();
-                        atmAppMenu();
-                        return;
+                        System.exit(0);
+                        break;
 
                             default:
                                 System.err.println("Wrong entry. \n" +
                                         "Please make a selection.");
                         }
-
                 }
             }
 
-            public static void depositCase() throws IOException{
+            public static void depositCase() throws FileNotFoundException {
                 System.out.println("Select the deposit amount");
                 try (PrintStream pDeposit = new PrintStream(new PrintStream("c:/AtmApp/deposit.txt"))) {
                     System.out.println("Your transaction will be printed in file");
-                    deposit = scanner.nextDouble();
-                    if (deposit > 0) {
-                        primaryAccount += deposit;
-                        System.out.println("You successfully deposit: " + deposit);
-                        System.out.println("Your new account balance is: " + primaryAccount);
-                        pDeposit.println("ATM APP PRINT ACCOUNT \n" +
-                                "You successfully deposit: " + deposit + "\n" +
-                                "Your new account balance is: " + primaryAccount);
-                    }
-                    if (deposit < 0){
-                        System.err.println("Error. The amount of deposit is invalid");
-                    }
-                } catch (IOException e) {
+                    pDeposit.println("ATM APP PRINT ACCOUNT \n" +
+                            "You successfully deposit: " + deposit + "\n" +
+                            "Your new account balance is: " + primaryAccount);
+                } catch (FileNotFoundException e) {
                     System.err.println("The file is not found or cannot be created.");
                     //e.printStackTrace();
                     throw e;
                 }
-            }
+                    try {
+                        deposit = scanner.nextDouble();
+                        if (deposit > 0) {
+                            primaryAccount += deposit;
+                            System.out.println("You successfully deposit: " + deposit);
+                            System.out.println("Your new account balance is: " + primaryAccount);
+                        }
+                        if (deposit < 0) {
+                            System.err.println("Error. The amount of deposit is invalid");
+                        }
+                    } catch (InputMismatchException f) {
+                        System.err.println("The file is not found or cannot be created.");
+                    }
+                    System.out.println("Transaction completed successfully.");
+                }
 
             public static void withdrawCase() {
                 System.out.println("Select the withdraw amount");
                 try (PrintStream pWithdraw = new PrintStream(new PrintStream("c:/AtmApp/withdraw.txt"))) {
                     System.out.println("Your transaction will be printed in file");
                     withdraw = scanner.nextDouble();
-                    if (withdraw <= 0 && withdraw > primaryAccount) {
+                    if (withdraw <= 0 || withdraw > primaryAccount) {
                         System.err.println("Error. The withdraw is invalid or there are insufficient funds.");
                     }
                     if (withdraw >= 800) {
@@ -131,6 +135,7 @@ public class AtmApp {
                 } catch (IOException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
                 }
+                System.out.println("Transaction completed successfully.");
             }
 
             public static void accountsBalance() {
@@ -148,6 +153,7 @@ public class AtmApp {
                 } catch (IOException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
                 }
+                System.out.println("Transaction completed successfully.");
             }
 
             public static void accountsTransfer() {
@@ -174,6 +180,7 @@ public class AtmApp {
                 } catch (IOException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
                 }
+                System.out.println("Transaction complete successfully.");
             }
 
             private static void pinNumber() {
@@ -181,39 +188,52 @@ public class AtmApp {
                 System.out.println("Pin: ");
 
                 while (true) {
-                    enteredPin = scanner.nextInt();
-
+                    try {
+                        enteredPin = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        System.err.println("Error. Invalid number. Please enter a valid pin number");
+                        scanner.nextLine();
+                    }
                     if (enteredPin == clientModel.getPinNumber()) {
                         System.out.println();
-                        System.out.println("You have entered the ATM MENU! ");
+                        System.out.println("Please enter your VAT number to confirm its you! ");
+                    }
+                    try {
+                        vat = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        System.err.println("Error. Invalid number. Please enter a valid VAT number");
+                        scanner.nextLine();
+                    }
+                    if (vat == clientModel.getVatRegistrationNo()) {
+                        System.out.println("The identification is completed");
                         break;
-                    } else {
-                        System.err.println("Error.You have entered wrong pin number. \n" +
-                                "Please try again.");
                     }
                 }
             }
             private static void pinChange () throws IOException {
                 try {
-                    System.out.println("Please give your old pin number: ");
-                    enteredPin = scanner.nextInt();
-                    if (enteredPin != clientModel.getPinNumber()) {
-                        System.err.println("Error. Enter your current pin number.");
-                        return;
-                    }
-                    System.out.println("Please choose new pin number: ");
-                    newPinNUmber = scanner.nextInt();
-                    if (newPinNUmber == enteredPin) {
-                        System.err.println("Error. The pin must not be the same with the previous one.");
-                        return;
-                    } if (newPinNUmber <= 0) {
-                        System.err.println("Error. Pin number must not be negative");
-                    } else {
-                        clientModel.setPinNumber(newPinNUmber);
-                        System.out.println("You successfully change your pin number!");
-                        System.out.println("The Atm App will restart and enter with new pin number");
-                        pinNumber();
-                        atmAppMenu();
+                    while (true) {
+                        System.out.println("Please give your old pin number: ");
+                        enteredPin = scanner.nextInt();
+                        if (enteredPin != clientModel.getPinNumber()) {
+                            System.err.println("Error. Enter your current pin number.");
+                            return;
+                        }
+                        System.out.println("Please choose new pin number: ");
+                        newPinNUmber = scanner.nextInt();
+                        if (newPinNUmber == enteredPin) {
+                            System.err.println("Error. The pin must not be the same with the previous one.");
+                            continue;
+                        }
+                        if (newPinNUmber <= 0) {
+                            System.err.println("Error. Pin number must not be negative");
+                        } else {
+                            clientModel.setPinNumber(newPinNUmber);
+                            System.out.println("You successfully change your pin number!");
+                            System.out.println("The Atm App will restart and enter with new pin number");
+                            pinNumber();
+                            atmAppMenu();
+                        }
                     }
 
                 } catch (InputMismatchException e) {

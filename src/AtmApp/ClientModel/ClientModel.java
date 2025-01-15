@@ -5,14 +5,14 @@ public class ClientModel {
     private int pinNumber;
     private String firstname;
     private String lastname;
-    private String vatRegistrationNo;
+    private int vatRegistrationNo;
     private String phoneNo;
     private String city;
     private double primaryAccount;
     private double backupAccount;
 
 
-    public ClientModel(int pinNumber, String firstname, String lastname, String vatRegistrationNo, String phoneNo, String city, double primaryAccount, double backupAccount) {
+    public ClientModel(int pinNumber, String firstname, String lastname, int vatRegistrationNo, String phoneNo, String city, double primaryAccount, double backupAccount) {
         this.pinNumber = pinNumber;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -47,11 +47,11 @@ public class ClientModel {
         this.lastname = lastname;
     }
 
-    public String getVatRegistrationNo() {
+    public int getVatRegistrationNo() {
         return vatRegistrationNo;
     }
 
-    public void setVatRegistrationNo(String vatRegistrationNo) {
+    public void setVatRegistrationNo(int vatRegistrationNo) {
         this.vatRegistrationNo = vatRegistrationNo;
     }
 
