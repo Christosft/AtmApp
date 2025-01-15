@@ -13,7 +13,7 @@ import AtmApp.ClientModel.ClientModel;
  * I use simple coding for all the function of the app.
  *
  * @author chris
- * @version 0.4
+ * @version 0.5
  */
 
 public class AtmApp {
@@ -84,31 +84,27 @@ public class AtmApp {
                 }
             }
 
-            public static void depositCase() throws FileNotFoundException {
+            public static void depositCase() {
                 System.out.println("Select the deposit amount");
                 try (PrintStream pDeposit = new PrintStream(new PrintStream("c:/AtmApp/deposit.txt"))) {
                     System.out.println("Your transaction will be printed in file");
-                    pDeposit.println("ATM APP PRINT ACCOUNT \n" +
-                            "You successfully deposit: " + deposit + "\n" +
-                            "Your new account balance is: " + primaryAccount);
-                } catch (FileNotFoundException e) {
-                    System.err.println("The file is not found or cannot be created.");
-                    //e.printStackTrace();
-                    throw e;
-                }
-                    try {
+
                         deposit = scanner.nextDouble();
                         if (deposit > 0) {
                             primaryAccount += deposit;
                             System.out.println("You successfully deposit: " + deposit);
                             System.out.println("Your new account balance is: " + primaryAccount);
+                            pDeposit.println("ATM APP PRINT ACCOUNT \n" +
+                                    "You successfully deposit: " + deposit + "\n" +
+                                    "Your new account balance is: " + primaryAccount);
                         }
                         if (deposit < 0) {
                             System.err.println("Error. The amount of deposit is invalid");
                         }
-                    } catch (InputMismatchException f) {
-                        System.err.println("The file is not found or cannot be created.");
-                    }
+                    } catch (FileNotFoundException | InputMismatchException e) {
+                    System.err.println("Error. The file is not found or cannot be created.");
+                    System.err.println("Error. The deposit amount is invalid.");
+                }
                     System.out.println("Transaction completed successfully.");
                 }
 
@@ -116,6 +112,7 @@ public class AtmApp {
                 System.out.println("Select the withdraw amount");
                 try (PrintStream pWithdraw = new PrintStream(new PrintStream("c:/AtmApp/withdraw.txt"))) {
                     System.out.println("Your transaction will be printed in file");
+
                     withdraw = scanner.nextDouble();
                     if (withdraw <= 0 || withdraw > primaryAccount) {
                         System.err.println("Error. The withdraw is invalid or there are insufficient funds.");
@@ -124,16 +121,15 @@ public class AtmApp {
                         System.err.println("Sorry. You have reached the withdrawn day limit.");
                         return;
                     }
-
                     primaryAccount -= withdraw;
                     System.out.println("You successfully withdraw: " + withdraw);
                     System.out.println("Your new account balance is: " + primaryAccount);
                     pWithdraw.println("ATM APP PRINT ACCOUNT \n" +
                             "You successfully withdraw: " + withdraw + "\n" +
                             "Your new account balance is: " + primaryAccount);
-
-                } catch (IOException e) {
+                } catch (InputMismatchException |FileNotFoundException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
+                    System.err.println("Error. The Withdraw amount is invalid.");
                 }
                 System.out.println("Transaction completed successfully.");
             }
@@ -150,7 +146,7 @@ public class AtmApp {
                             "Primary account: " + primaryAccount + "\n" +
                             "Backup account: " + backupAccount);
 
-                } catch (IOException e) {
+                } catch (FileNotFoundException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
                 }
                 System.out.println("Transaction completed successfully.");
@@ -159,12 +155,14 @@ public class AtmApp {
             public static void accountsTransfer() {
                 System.out.println("Account transfer");
                 try (PrintStream pTransfer = new PrintStream(new PrintStream("c:/AtmApp/account-transfer.txt"))) {
-                    System.out.println("Your transaction will be printed in file \n" +
-                            "Please enter the transfer amount");
-                    transferWithdraw = scanner.nextDouble();
+                    System.out.println("Your transaction will be printed in file");
                     pTransfer.println("ATM APP PRINT ACCOUNT \n" +
                             "The primary account balance: " + primaryAccount + "\n" +
                             "The backup account balance: " + backupAccount);
+
+                    System.out.println("Please enter the transfer amount");
+                    transferWithdraw = scanner.nextDouble();
+
                     if (transferWithdraw > 0 && transferWithdraw <= primaryAccount) {
                         primaryAccount -= transferWithdraw;
                         backupAccount += transferWithdraw;
@@ -177,8 +175,9 @@ public class AtmApp {
                     } else {
                         System.err.println("Error. The transfer you are trying is invalid or there are insufficient funds!");
                     }
-                } catch (IOException e) {
+                } catch (InputMismatchException | FileNotFoundException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
+                    System.err.println("The withdraw amount is invalid.");
                 }
                 System.out.println("Transaction complete successfully.");
             }
