@@ -26,6 +26,7 @@ public class AtmApp {
     static int enteredPin;
     static int newPinNUmber;
     static int vat;
+    static int attempts = 0;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
@@ -204,26 +205,39 @@ public class AtmApp {
 
                 System.out.println("Pin: ");
 
-                while (true) {
+                while (attempts < 3) {
                     try {
                         enteredPin = scanner.nextInt();
                     } catch (InputMismatchException e) {
                         System.err.println("Error. Invalid number. Please enter a valid pin number");
                         scanner.nextLine();
+                        continue;
                     }
                     if (enteredPin == clientModel.getPinNumber()) {
                         System.out.println();
                         System.out.println("Please enter your VAT number to confirm its you! ");
-                    }
-                    try {
-                        vat = scanner.nextInt();
-                    } catch (InputMismatchException e) {
-                        System.err.println("Error. Invalid number. Please enter a valid VAT number");
-                        scanner.nextLine();
-                    }
-                    if (vat == clientModel.getVatRegistrationNo()) {
-                        System.out.println("The identification is completed");
+                        try {
+                            vat = scanner.nextInt();
+                        } catch (InputMismatchException e) {
+                            System.err.println("Error. Invalid number. Please enter a valid VAT number");
+                            scanner.nextLine();
+                            continue;
+                        }
+                        if (vat == clientModel.getVatRegistrationNo()) {
+                            System.out.println("The identification is completed");
+                        } else {
+                            System.err.println("Error. Incorrect VAT number.");
+                        }
                         break;
+
+                    } else {
+                        attempts++;
+                        System.err.println("Error. Wrong pin number you have " + (3 - attempts) + " left.");
+
+                        if (attempts == 3) {
+                            System.out.println("You have no attempts left. The system is locked.");
+                            System.exit(0);
+                        }
                     }
                 }
             }
