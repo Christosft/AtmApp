@@ -200,7 +200,7 @@ public class AtmApp {
                 System.out.println("Transaction complete successfully.");
             }
 
-            private static void pinNumber() {
+            private static void pinNumber() throws IOException {
                 System.out.println("Please enter your pin number.");
 
                 System.out.println("Pin: ");
@@ -216,6 +216,17 @@ public class AtmApp {
                     if (enteredPin == clientModel.getPinNumber()) {
                         System.out.println();
                         System.out.println("Please enter your VAT number to confirm its you! ");
+                    } else {
+                            attempts++;
+                            System.err.println("Error. Wrong pin number you have " + (3 - attempts) + " left.");
+
+                            if (attempts == 3) {
+                                System.out.println("You have no attempts left. The system is locked.");
+                                System.exit(0);
+                            }
+                        }
+
+                        while (attempts < 3) {
                         try {
                             vat = scanner.nextInt();
                         } catch (InputMismatchException e) {
@@ -223,20 +234,18 @@ public class AtmApp {
                             scanner.nextLine();
                             continue;
                         }
+
                         if (vat == clientModel.getVatRegistrationNo()) {
                             System.out.println("The identification is completed");
+                            atmAppMenu();
                         } else {
-                            System.err.println("Error. Incorrect VAT number.");
-                        }
-                        break;
+                            attempts++;
+                            System.err.println("Error. Wrong VAT number you have " + (3 - attempts) + " left.");
 
-                    } else {
-                        attempts++;
-                        System.err.println("Error. Wrong pin number you have " + (3 - attempts) + " left.");
-
-                        if (attempts == 3) {
-                            System.out.println("You have no attempts left. The system is locked.");
-                            System.exit(0);
+                            if (attempts == 3) {
+                                System.out.println("You have no attempts left. The system is locked. Please contact local administrator.");
+                                System.exit(0);
+                            }
                         }
                     }
                 }
