@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import AtmApp.ClientModel.ClientModel;
+import AtmApp.Clients.ClientsMain;
 
 
 /**
@@ -30,10 +31,15 @@ public class AtmApp {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-        clientModel = new ClientModel(1651, "Chris", "Doe", 115424856, "6948576978", "Athens", 3000, 1500);
+
+        ClientsMain clientsMain = new ClientsMain();
+
+        clientModel = loginUser(clientsMain);
+
+
         primaryAccount = clientModel.getPrimaryAccount();
         backupAccount = clientModel.getBackupAccount();
-        pinNumber();
+
         atmAppMenu();
 
     }
@@ -200,56 +206,66 @@ public class AtmApp {
                 System.out.println("Transaction complete successfully.");
             }
 
-            private static void pinNumber() throws IOException {
+            private static ClientModel loginUser(ClientsMain clientsMain) throws IOException {
                 System.out.println("Please enter your pin number.");
 
                 System.out.println("Pin: ");
 
-                while (attempts < 3) {
-                    try {
-                        enteredPin = scanner.nextInt();
-                    } catch (InputMismatchException e) {
-                        System.err.println("Error. Invalid number. Please enter a valid pin number");
-                        scanner.nextLine();
-                        continue;
-                    }
-                    if (enteredPin == clientModel.getPinNumber()) {
-                        System.out.println();
-                        System.out.println("Please enter your VAT number to confirm its you! ");
-                    } else {
-                            attempts++;
-                            System.err.println("Error. Wrong pin number you have " + (3 - attempts) + " left.");
-
-                            if (attempts == 3) {
-                                System.out.println("You have no attempts left. The system is locked.");
-                                System.exit(0);
-                            }
-                        }
-
+                if (clientModel == null) {
+                    while (true) {
                         while (attempts < 3) {
-                        try {
-                            vat = scanner.nextInt();
-                        } catch (InputMismatchException e) {
-                            System.err.println("Error. Invalid number. Please enter a valid VAT number");
-                            scanner.nextLine();
-                            continue;
-                        }
+                            try {
+                                enteredPin = scanner.nextInt();
+                            } catch (InputMismatchException e) {
+                                System.err.println("Error. Invalid number. Please enter a valid pin number");
+                                scanner.nextLine();
+                                continue;
+                            }
+                            clientModel = clientsMain.getClientByPinNumber(enteredPin);
 
-                        if (vat == clientModel.getVatRegistrationNo()) {
-                            System.out.println("The identification is completed");
-                            atmAppMenu();
-                        } else {
-                            attempts++;
-                            System.err.println("Error. Wrong VAT number you have " + (3 - attempts) + " left.");
+                            if (enteredPin == clientModel.getPinNumber()) {
 
-                            if (attempts == 3) {
-                                System.out.println("You have no attempts left. The system is locked. Please contact local administrator.");
-                                System.exit(0);
+                                System.out.println("Please enter your VAT number to confirm its you! ");
+                            } else {
+                                attempts++;
+                                System.err.println("Error. Wrong pin number you have " + (3 - attempts) + " left.");
+
+                                if (attempts == 3) {
+                                    System.out.println("You have no attempts left. The system is locked.");
+                                    System.exit(0);
+                                }
+                            }
+
+                            while (attempts < 3) {
+                                try {
+                                    vat = scanner.nextInt();
+                                } catch (InputMismatchException e) {
+                                    System.err.println("Error. Invalid number. Please enter a valid VAT number");
+                                    scanner.nextLine();
+                                    continue;
+                                }
+
+                                if (vat == clientModel.getVatRegistrationNo()) {
+                                    System.out.println("The identification is completed");
+                                    atmAppMenu();
+                                } else {
+                                    attempts++;
+                                    System.err.println("Error. Wrong VAT number you have " + (3 - attempts) + " left.");
+
+                                    if (attempts == 3) {
+                                        System.out.println("You have no attempts left. The system is locked. Please contact local administrator.");
+                                        System.exit(0);
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                return null;
             }
+
+
+
             private static void pinChange () throws IOException {
                 try {
                     while (true) {
@@ -276,7 +292,6 @@ public class AtmApp {
                             System.out.println("You successfully change your pin number!");
 
                             System.out.println("The Atm App will restart and enter with new pin number");
-                            pinNumber();
                             atmAppMenu();
                         }
                     }
