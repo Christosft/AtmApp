@@ -44,7 +44,7 @@ public class AtmApp {
 
     }
 
-    public static void atmAppMenu() throws IOException {
+    private static void atmAppMenu() throws IOException {
             while (true) {
                 System.out.println("Hello " + clientModel.getFirstname() + " " + clientModel.getLastname());
                 System.out.println("1. Make a deposit");
@@ -58,7 +58,7 @@ public class AtmApp {
 
                 switch (inputChoice) {
                     case 1:
-                        depositCase();
+                        depositMenu();
                         break;
 
                     case 2:
@@ -89,7 +89,7 @@ public class AtmApp {
                 }
             }
 
-            public static void depositCase() {
+            private static void depositCase() {
                 System.out.println("Select the deposit amount");
 
                 try (PrintWriter pDeposit = new PrintWriter(new FileWriter("c:/AtmApp/deposit.txt", true))) {
@@ -119,7 +119,7 @@ public class AtmApp {
                     System.out.println("Transaction completed successfully.");
                 }
 
-            public static void withdrawCase() {
+            private static void withdrawCase() {
                 System.out.println("Select the withdraw amount");
 
                 try (PrintWriter pWithdraw = new PrintWriter(new FileWriter("c:/AtmApp/withdraw.txt", true))) {
@@ -151,7 +151,7 @@ public class AtmApp {
                 System.out.println("Transaction completed successfully.");
             }
 
-            public static void accountsBalance() {
+            private static void accountsBalance() {
                 try (PrintWriter pAccount = new PrintWriter(new FileWriter("c:/AtmApp/account-balance.txt", true))) {
 
                     System.out.println("Your transaction will be printed in file");
@@ -171,7 +171,7 @@ public class AtmApp {
                 System.out.println("Transaction completed successfully.");
             }
 
-            public static void accountsTransfer() {
+            private static void accountsTransfer() {
                 System.out.println("Account transfer");
 
                 try (PrintWriter pTransfer = new PrintWriter(new FileWriter("c:/AtmApp/account-transfer.txt", true))) {
@@ -298,6 +298,56 @@ public class AtmApp {
 
                 } catch (InputMismatchException e) {
                     System.out.println();
+                }
+            }
+
+            private static void depositMenu() {
+                while(true) {
+                    System.out.println("Choose deposit amount: ");
+                    System.out.println("1. 40");
+                    System.out.println("2. 60");
+                    System.out.println("3. 80");
+                    System.out.println("4. 120");
+                    System.out.println("5. 200");
+                    System.out.println("6. 400");
+                    System.out.println("7. Enter the amount manually");
+                    System.out.println("8. Return to main menu");
+
+                    int inputChoice = scanner.nextInt();
+
+                    if (inputChoice == 9) {
+                        return; // Exit back to the main menu
+                    }
+
+                    switch (inputChoice) {
+                        case 1: deposit = 40;
+                        break;
+
+                        case 2: deposit = 60;
+                        break;
+
+                        case 3: deposit = 80;
+                        break;
+
+                        case 4: deposit = 120;
+                        break;
+
+                        case 5: deposit = 200;
+                        break;
+
+                        case 6: deposit = 400;
+                        break;
+
+                        case 7:
+                            depositCase();
+                        break;
+
+                        case 8: return;
+
+                        default:
+                            System.err.println("Wrong entry. \n" +
+                                    "Please make a selection.");
+                    }
                 }
             }
         }
