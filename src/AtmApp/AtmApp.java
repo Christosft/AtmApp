@@ -18,8 +18,8 @@ import AtmApp.Clients.ClientsMain;
 public class AtmApp {
 
 
-    static double primaryAccount;
-    static double backupAccount;
+    static double primaryAccount = 0.0;
+    static double backupAccount = 0.0;
     static double transferWithdraw = 0;
     static double deposit = 0;
     static double withdraw = 0;
@@ -35,10 +35,6 @@ public class AtmApp {
         ClientsMain clientsMain = new ClientsMain();
 
         clientModel = loginUser(clientsMain);
-
-
-        primaryAccount = clientModel.getPrimaryAccount();
-        backupAccount = clientModel.getBackupAccount();
 
         atmAppMenu();
 
@@ -89,7 +85,7 @@ public class AtmApp {
                 }
             }
 
-            private static void depositCase() {
+            public static void depositCase() {
                 System.out.println("Select the deposit amount");
 
                 try (PrintWriter pDeposit = new PrintWriter(new FileWriter("c:/AtmApp/deposit.txt", true))) {
@@ -98,15 +94,24 @@ public class AtmApp {
 
                         deposit = scanner.nextDouble();
 
+                        primaryAccount = clientModel.getPrimaryAccount();
+
                         if (deposit > 0) {
+
                             primaryAccount += deposit;
+
+                            clientModel.setPrimaryAccount(primaryAccount);
+
+
+                            System.out.println("Updated primary account balance after deposit: " + clientModel.getPrimaryAccount());
+
                             System.out.println("You successfully deposit: " + deposit);
 
-                            System.out.println("Your new account balance is: " + primaryAccount);
+                            System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
 
                             pDeposit.println("ATM APP PRINT ACCOUNT \n" +
                                     "You successfully deposit: " + deposit + "\n" +
-                                    "Your new account balance is: " + primaryAccount);
+                                    "Your new account balance is: " + clientModel.getPrimaryAccount());
                         }
                         if (deposit < 0) {
                             System.err.println("Error. The amount of deposit is invalid");
@@ -119,7 +124,7 @@ public class AtmApp {
                     System.out.println("Transaction completed successfully.");
                 }
 
-            private static void withdrawCase() {
+            public static void withdrawCase() {
                 System.out.println("Select the withdraw amount");
 
                 try (PrintWriter pWithdraw = new PrintWriter(new FileWriter("c:/AtmApp/withdraw.txt", true))) {
@@ -127,7 +132,9 @@ public class AtmApp {
 
                     withdraw = scanner.nextDouble();
 
-                    if (withdraw <= 0 || withdraw > primaryAccount) {
+                    primaryAccount = clientModel.getPrimaryAccount();
+
+                    if (withdraw <= 0 || withdraw > clientModel.getPrimaryAccount()) {
                         System.err.println("Error. The withdraw is invalid or there are insufficient funds.");
                     }
 
@@ -138,11 +145,13 @@ public class AtmApp {
 
                     primaryAccount -= withdraw;
 
+                    clientModel.setPrimaryAccount(primaryAccount);
+
                     System.out.println("You successfully withdraw: " + withdraw);
-                    System.out.println("Your new account balance is: " + primaryAccount);
+                    System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
                     pWithdraw.println("ATM APP PRINT ACCOUNT \n" +
                             "You successfully withdraw: " + withdraw + "\n" +
-                            "Your new account balance is: " + primaryAccount);
+                            "Your new account balance is: " + clientModel.getPrimaryAccount());
                 } catch (InputMismatchException |IOException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
 
@@ -151,19 +160,19 @@ public class AtmApp {
                 System.out.println("Transaction completed successfully.");
             }
 
-            private static void accountsBalance() {
+            public static void accountsBalance() {
                 try (PrintWriter pAccount = new PrintWriter(new FileWriter("c:/AtmApp/account-balance.txt", true))) {
 
                     System.out.println("Your transaction will be printed in file");
                     System.out.println();
-                    System.out.println("Your primary account balance is: " + primaryAccount);
+                    System.out.println("Your primary account balance is: " + clientModel.getPrimaryAccount());
 
-                    System.out.println("Your backup account balance is: " + backupAccount);
+                    System.out.println("Your backup account balance is: " + clientModel.getBackupAccount());
                     pAccount.println("ATM APP PRINT ACCOUNT \n" +
                             "Full name: " + clientModel.getLastname() + " " + clientModel.getFirstname() + "\n" +
                             "Your accounts balance are: \n" +
-                            "Primary account: " + primaryAccount + "\n" +
-                            "Backup account: " + backupAccount);
+                            "Primary account: " + clientModel.getPrimaryAccount() + "\n" +
+                            "Backup account: " + clientModel.getBackupAccount());
 
                 } catch (IOException e) {
                     System.err.println("Error. The file is not found or cannot be created.");
@@ -171,22 +180,27 @@ public class AtmApp {
                 System.out.println("Transaction completed successfully.");
             }
 
-            private static void accountsTransfer() {
+            public static void accountsTransfer() {
                 System.out.println("Account transfer");
 
                 try (PrintWriter pTransfer = new PrintWriter(new FileWriter("c:/AtmApp/account-transfer.txt", true))) {
                     System.out.println("Your transaction will be printed in file");
 
                     pTransfer.println("ATM APP PRINT ACCOUNT \n" +
-                            "The primary account balance: " + primaryAccount + "\n" +
-                            "The backup account balance: " + backupAccount);
+                            "The primary account balance: " + clientModel.getPrimaryAccount() + "\n" +
+                            "The backup account balance: " + clientModel.getBackupAccount());
 
                     System.out.println("Please enter the transfer amount");
+
                     transferWithdraw = scanner.nextDouble();
+
+                    backupAccount = clientModel.getBackupAccount();
 
                     if (transferWithdraw > 0 && transferWithdraw <= primaryAccount) {
                         primaryAccount -= transferWithdraw;
                         backupAccount += transferWithdraw;
+
+                        clientModel.setBackupAccount((backupAccount) + transferWithdraw);
 
                         System.out.println("You successfully transfer the amount: " + transferWithdraw + "\n" +
                                 "Your new primary account balance is: " + primaryAccount + "\n" +
@@ -301,7 +315,7 @@ public class AtmApp {
                 }
             }
 
-            private static void depositMenu() {
+            public static void depositMenu() {
                 while(true) {
                     System.out.println("Choose deposit amount: ");
                     System.out.println("1. 40");
