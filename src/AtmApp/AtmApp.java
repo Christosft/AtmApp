@@ -34,8 +34,9 @@ public class AtmApp {
 
         ClientsMain clientsMain = new ClientsMain();
 
-        clientModel = loginUser(clientsMain);
+        adminLogin();
 
+        clientModel = loginUser(clientsMain);
         atmAppMenu();
 
     }
@@ -221,6 +222,7 @@ public class AtmApp {
             }
 
             private static ClientModel loginUser(ClientsMain clientsMain) throws IOException {
+
                 System.out.println("Please enter your pin number.");
 
                 System.out.println("Pin: ");
@@ -240,11 +242,12 @@ public class AtmApp {
                             if (enteredPin == clientModel.getPinNumber()) {
 
                                 System.out.println("Please enter your VAT number to confirm its you! ");
+
                             } else {
                                 attempts++;
                                 System.err.println("Error. Wrong pin number you have " + (3 - attempts) + " left.");
 
-                                if (attempts == 3) {
+                            if (attempts == 3) {
                                     System.out.println("You have no attempts left. The system is locked.");
                                     System.exit(0);
                                 }
@@ -335,21 +338,63 @@ public class AtmApp {
 
                     switch (inputChoice) {
                         case 1: deposit = 40;
-                        break;
+
+                            primaryAccount = clientModel.getPrimaryAccount();
+                            primaryAccount += deposit;
+                            clientModel.setPrimaryAccount(primaryAccount);
+                            System.out.println("You successfully deposit: " + deposit);
+
+                            System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
+                            break;
 
                         case 2: deposit = 60;
+
+                            primaryAccount = clientModel.getPrimaryAccount();
+                            primaryAccount += deposit;
+                            clientModel.setPrimaryAccount(primaryAccount);
+                            System.out.println("You successfully deposit: " + deposit);
+
+                            System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
                         break;
 
                         case 3: deposit = 80;
+
+                            primaryAccount = clientModel.getPrimaryAccount();
+                            primaryAccount += deposit;
+                            clientModel.setPrimaryAccount(primaryAccount);
+                            System.out.println("You successfully deposit: " + deposit);
+
+                            System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
                         break;
 
                         case 4: deposit = 120;
+
+                            primaryAccount = clientModel.getPrimaryAccount();
+                            primaryAccount += deposit;
+                            clientModel.setPrimaryAccount(primaryAccount);
+                            System.out.println("You successfully deposit: " + deposit);
+
+                            System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
                         break;
 
                         case 5: deposit = 200;
+
+                            primaryAccount = clientModel.getPrimaryAccount();
+                            primaryAccount += deposit;
+                            clientModel.setPrimaryAccount(primaryAccount);
+                            System.out.println("You successfully deposit: " + deposit);
+
+                            System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
                         break;
 
                         case 6: deposit = 400;
+
+                            primaryAccount = clientModel.getPrimaryAccount();
+                            primaryAccount += deposit;
+                            clientModel.setPrimaryAccount(primaryAccount);
+                            System.out.println("You successfully deposit: " + deposit);
+
+                            System.out.println("Your new account balance is: " + clientModel.getPrimaryAccount());
                         break;
 
                         case 7:
@@ -364,5 +409,74 @@ public class AtmApp {
                     }
                 }
             }
+
+            private static void adminLogin() {
+
+                final int ADMIN_PIN_NUMBER = 1234;
+                int enteredPin;
+
+                try {
+                    System.out.println("Login as admin: ");
+                    enteredPin = scanner.nextInt();
+                    if (enteredPin == ADMIN_PIN_NUMBER) {
+                        System.out.println("Admin verification");
+                        scanner.nextLine();
+                        adminMenu();
+                    } else {
+                        System.out.println("Wrong ADMIN code.");
+                    }
+                } catch (InputMismatchException | IOException e) {
+                    System.err.println("Error. Restart and try again");
+                }
+            }
+
+            private static void adminMenu() throws IOException {
+
+                System.out.println("You have entered as ADMIN");
+
+                while (true) {
+                    System.out.println("Admin menu: ");
+                    System.out.println("1. Make a deposit");
+                    System.out.println("2. Make a withdraw");
+                    System.out.println("3. Account balance");
+                    System.out.println("4. Account transfer");
+                    System.out.println("5. Pin number change");
+                    System.out.println("6. Exit Atm App menu");
+
+                    int inputChoice = scanner.nextInt();
+
+                    switch (inputChoice) {
+                        case 1:
+                            //depositMenu();
+                            break;
+
+                        case 2:
+                            //withdrawCase();
+                            break;
+
+                        case 3:
+                            //accountsBalance();
+                            break;
+
+                        case 4:
+                            //accountsTransfer();
+                            break;
+
+                        case 5:
+                            //pinChange();
+                            break;
+
+                        case 6:
+                            System.out.println("Exit Atm Application.");
+                            System.exit(0);
+                            break;
+
+                        default:
+                            System.err.println("Wrong entry. \n" +
+                                    "Please make a selection.");
+                    }
+                }
+            }
         }
+
 

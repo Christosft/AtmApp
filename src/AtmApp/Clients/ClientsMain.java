@@ -11,7 +11,6 @@ public class ClientsMain {
     private final List<ClientModel> clients = new ArrayList<>();
 
     public ClientsMain() {
-
         clients.add(new ClientModel(1651,"Chris", "Doe", 115424856, "6948576978", "Athens", 3000, 1500));
         clients.add(new ClientModel(1980, "Kostas", "Christou", 111111111, "6982473645", "Athens", 15000.00, 20000.00));
     }
